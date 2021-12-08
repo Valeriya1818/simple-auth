@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+    nginx:
+        image: nginx:latest
+        container_name: nginx
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - ./:/var/www/webroot
+            - ./docker/nginx/hosts:/etc/nginx/conf.d
+            - ./docker/nginx/logs/nginx:/var/log/nginx
+        links:
+            - php
+            - phpmyadmin
+    php:
+        build: ./docker/php/
+        container_name: php-fpm
+        links:
+            - maria
+        volumes:
+            - ./:/var/www/webroot
+    maria:
+        image: mariadb:latest
+        container_name: maria
+        ports:
+            - "3306:3306"
+        volumes:
+         - ./docker/mysql/config:/etc/mysql
+         - ./docker/mysql/logs:/var/log/mysql
+         - ./docker/mysql/lib:/var/lib/mysql
+         - ./docker/mysql/files:/var/lib/mysql-files
+         - ./docker/mysql/data:/docker-entrypoint-initdb.d
+        environment:
+            MYSQL_ROOT_USER: root
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: project
+    phpmyadmin:
+        image: phpmyadmin:latest
+        container_name: phpmyadmin
+        restart: always
+        ports:
+         - "8080:80"
+        environment:
+         - PMA_HOST=192.168.0.100
+         - PMA_USER=root
+         - PMA_PASSWORD=password
+         - PMA_ARBITRARY=1

@@ -1,0 +1,17 @@
+# IDE folders
+/.idea
+/nbproject/
+
+# DOCKER
+/docker/nginx/logs/*
+/docker/mysql/logs/*
+/docker/mysql/config/*
+/docker/mysql/data/*
+/docker/mysql/files/*
+/docker/mysql/lib/*
+
+# Composer
+/vendor/
+
+# Windows INIs
+/desktop.ini
